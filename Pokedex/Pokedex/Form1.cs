@@ -14,15 +14,15 @@ namespace Pokedex
     enum Attack {SP_Attack,SP_Defense,Attack,Defense}
     struct Pokemon
         {
-        string Name;
-        string Type;
-        int level;
-        Attack AttackType;
-        int HP;
-        int EXP;
-        bool Legendary;
-        bool Shiny;
-        int Generation;
+        public string Name;
+        public string Type;
+        public int level;
+        public Attack AttackType;
+        public int HP;
+        public int EXP;
+        public bool Legendary;
+        public bool Shiny;
+        public int Generation;
     }
     public partial class Form1 : Form
     {
@@ -37,11 +37,32 @@ namespace Pokedex
             { 
             StreamReader inFile = new StreamReader("Pokemon.txt");
             string s = inFile.ReadToEnd();
+                Pokemon p = ReadPokemon(s);
+                ShowPokemon(p);
              inFile.Close();
             }
-
         }
-
+        private Pokemon ReadPokemon(string s)
+        {
+            Pokemon p=new Pokemon();
+            string[] fields = s.Split('|'); 
+            p.Name=fields[0];
+            p.Type=fields[1];
+            p.level = int.Parse(fields[2]);
+            p.AttackType =(Attack)Enum.Parse(typeof(Attack), fields[3]);
+            p.HP = int.Parse(fields[4]);
+            p.EXP = int.Parse(fields[5]);
+            if (fields[6] == "True")
+                p.Legendary = true;
+            else
+            p.Legendary = false;
+            if (fields[7] == "True")
+                p.Shiny = true;
+            else
+                p.Shiny=false;
+            p.Generation = int.Parse(fields[8]);
+            return p;
+        }
         private void button1_Click(object sender, EventArgs e)
         {
             DebugBox.Clear();
@@ -69,6 +90,11 @@ namespace Pokedex
 
         private void button2_Click(object sender, EventArgs e)
         {
+        }
+
+        private void ShowPokemon(Pokemon P)
+        {
+            NameBox.Text = P.Name;
         }
     }
 }
